@@ -16,10 +16,13 @@ function basePath($path = '') {
  * @param string $name
  * @return void
  */
-function loadView($name) {
+function loadView($name, $db = []) {
     $viewPath = basePath("views/{$name}.view.php");
 
     if (file_exists($viewPath)) {
+        // Extract for example 'listings' and save it in a variable named $listings available in $viewPath.
+        // Equivalent to $db['listings'].
+        extract($db);
         require $viewPath;
     } else {
         echo "View '{$name} not found'!";

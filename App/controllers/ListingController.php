@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use Framework\Database;
+use Framework\Validation;
 
 class ListingController {
     protected $db;
@@ -81,7 +82,53 @@ class ListingController {
         $newListingsData['user_id'] = 1;
 
         $newListingsData = array_map('sanitize', $newListingsData);
-        inspectAndDie($newListingsData);
+
+        $requiredFields = ['title', 'description', 'email', 'city', 'state'];
+
+        $errors = [];
+
+        foreach($requiredFields AS $field){
+            if(empty($newListingsData[$field]) || !Validation::string($newListingsData[$field])){
+                $errors[$field] = ucfirst($field) . ' is required';
+            }
+        }
+
+        if(!empty($errors)){
+            // Reload view with errors
+            loadView('listings/create', [
+                'errors' => $errors,
+                'listings' => $newListingsData
+            ]);
+        } else {
+            // Submit data
+            $fields = [];
+
+            foreach($newListingsData AS $field => $value){
+                $fields[] = $field;
+            }
+
+            $fields = implode(', ', $fields);
+
+            $values = [];
+
+            foreach($newListingsData AS $field => $value){
+                // Convert empty strings into nulls
+                if($value === ''){
+                    $newListingsData[$field] = null;
+                }
+                $values[] = ':' . $field;
+            }
+
+            $values = implode(', ', $values);
+
+            $query = "INSERT INTO listings ({$fields}) VALUES ($values)";
+
+            $this->db->query($query, $newListingsData);
+
+            redirect('/listings');
+
+        }
+        
     }
 
 

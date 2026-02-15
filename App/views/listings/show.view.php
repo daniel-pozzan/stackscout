@@ -22,7 +22,9 @@
           <h2 class="text-xl font-semibold"><?= $listing->title ?></h2>
           <p class="text-gray-700 text-lg mt-2"><?= $listing->description ?></p>
           <ul class="my-4 bg-gray-100 p-4">
-            <li class="mb-2"><strong>Salary:</strong> <?= formatSalary($listing->salary); ?></li>
+            <?php if(!empty($listing->salary)): ?>
+              <li class="mb-2"><strong>Salary:</strong> <?= formatSalary($listing->salary); ?></li>
+            <?php endif; ?>
             <li class="mb-2">
               <strong>Location:</strong> <?= $listing->city ?>, <?= $listing->state ?>
               <!-- <span
@@ -30,9 +32,11 @@
                 >Local</span
               > -->
             </li>
-            <li class="mb-2">
-              <strong>Tags:</strong> <?= $listing->tags ?>
-            </li>
+            <?php if(!empty($listing->tags)): ?>
+              <li class="mb-2">
+                <strong>Tags:</strong> <?= $listing->tags ?>
+              </li>
+            <?php endif; ?>
           </ul>
         </div>
       </div>

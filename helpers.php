@@ -16,13 +16,13 @@ function basePath($path = '') {
  * @param string $name
  * @return void
  */
-function loadView($name, $db = []) {
+function loadView($name, $data = []) {
     $viewPath = basePath("App/views/{$name}.view.php");
 
     if (file_exists($viewPath)) {
         // Extract for example 'listings' and save it in a variable named $listings available in $viewPath.
         // Equivalent to $db['listings'].
-        extract($db);
+        extract($data);
         require $viewPath;
     } else {
         echo "View '{$name} not found'!";
@@ -35,10 +35,11 @@ function loadView($name, $db = []) {
  * @param string $name
  * @return void
  */
-function loadPartial($name) {
+function loadPartial($name, $data = []) {
     $partialPath = basePath("App/views/partials/{$name}.php");
 
     if (file_exists($partialPath)) {
+        extract($data);
         require $partialPath;
     } else {
         echo "Partial '{$name} not found!'";
